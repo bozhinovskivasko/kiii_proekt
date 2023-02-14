@@ -58,21 +58,20 @@ jobs:
     needs: linter
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      -
-        name: Login to DockerHub
-        uses: docker/login-action@v2 
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: vaskob/springboot-postgresql:latest
+      - uses: actions/checkout@v2
+      - name: Login to DockerHub
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}   
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }} 
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - name: docker build from Dockerfile
+        run: |
+          docker build -t springboot-postgresql .
+      - name: docker build from docker-compose
+        run: |
+          docker-compose build 
+      - name: docker push
+        run: |
+          docker push springboot-postgresql
+          docker push vaskob/springboot-postgresql
