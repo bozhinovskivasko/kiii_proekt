@@ -75,4 +75,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: vaskob/springboot-postgresql:latest
+          tags: vaskob/springboot-postgresql:latest, vaskob/springboot-postgresql:1.0.0
